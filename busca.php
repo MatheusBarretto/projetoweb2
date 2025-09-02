@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Buscas</title>
+</head>
+<body>
+    <form action="executabusca.php" name="pesquisar" method="post">
+    <label for="">Digite a pesquisa</label>
+    <input type="text" name="pesquisa">
+    <input type="submit">
+    </form>
+</body> 
+</html>
