@@ -16,7 +16,7 @@
             // CONFIGURAÇÃO DA BUSCA
             $termoBusca = isset($_POST['pesquisa']) ? $_POST['pesquisa'] : '';
             $condicaoBuscar = '';
-            echo $termoBusca;
+            //echo $termoBusca;
 
             if(!empty($termoBusca)){
                 $condicaoBuscaSalas = " WHERE descricao LIKE :termo ";
@@ -49,13 +49,32 @@
             
             $salasEncontradas = $selectSalas->FetchALL(PDO::FETCH_ASSOC);
             echo "<h1> LISTAGEM: </h1>";
-            echo var_dump($salasEncontradas); 
+            foreach($salasEncontradas as $salas){
+               echo "<p>" .$salas['descricao']. " - ". $salas['bloco']. "</p>";
+            
+
+            //MOSTRANDO MOVEIS PRESENTES NAS SALAS
+            $sqlMoveisdaSala = "select M.descricao
+                                from tbmovelsala MS, tbmoveis M
+                                where MS.idsala = ". $salas['id'] ."
+                                and MS.codigomovel = M.codigo;";
+            $selectMoveisdaSala = $conn->prepare($sqlMoveisdaSala);
+            $selectMoveisdaSala->execute();
+            $moveis = $selectMoveisdaSala->FetchALL(PDO::FETCH_ASSOC); 
+            
+            echo "<ul>";
+            foreach($moveis as $dado){
+                echo "<li>" .$dado['descricao']. "</li>";
+            }
+            echo "</ul>";
+        }
+            echo "<hr>";
 
 ////////////////////////////////////////////////////---DIVISÃO---////////////////////////////////////////////////////////////////
 
             $termoBusca = isset($_POST['pesquisa']) ? $_POST['pesquisa'] : '';
             $condicaoBuscar = '';
-            echo $termoBusca;
+            // echo $termoBusca;
 
             if(!empty($termoBusca)){
                 $condicaoBuscaSalas = " WHERE descricao LIKE :termo ";
@@ -88,7 +107,26 @@
             
             $moveisEncontrados = $selectMoveis->FetchALL(PDO::FETCH_ASSOC);
             echo "<h1> LISTAGEM: </h1>";
-            echo var_dump($moveisEncontrados);
+            foreach($moveisEncontrados as $moveis){
+                echo "<p>" .$moveis['codigo']. " - " .$moveis['descricao']. "</p>";
+        
+            //MOSTRANDO SALAS DOS MOVEIS
+            $sqlSaladoMovel = "select s.descricao
+                                from tbmovelsala ms, tbsalas s
+                                where ms.codigomovel = ". $moveis['codigo'] ."
+                                and ms.idsala = s.id;";
+            $selectSaladoMovel = $conn->prepare($sqlSaladoMovel);
+            $selectSaladoMovel->execute();
+            $moveis = $selectSaladoMovel->FetchALL(PDO::FETCH_ASSOC); 
+
+            echo "<ul>";
+            foreach($moveis as $dado){
+                echo "<li>" .$dado['descricao']. "</li>";
+            }
+            echo "</ul>";
+        }  
+
+            
 
 
         }catch(PDOException $e){
